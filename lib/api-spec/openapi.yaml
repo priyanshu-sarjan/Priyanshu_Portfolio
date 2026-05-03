@@ -3,20 +3,35 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Portfolio CMS API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: status
+    description: Currently working on status
+  - name: projects
+    description: Portfolio projects
+  - name: certifications
+    description: Certifications and courses
+  - name: skills
+    description: Skills
+  - name: competitions
+    description: Competitions and workshops
+  - name: events
+    description: Upcoming events and tasks
+  - name: gallery
+    description: Event gallery images
+  - name: dashboard
+    description: Dashboard summary
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +39,477 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /status:
+    get:
+      operationId: getStatus
+      tags: [status]
+      summary: Get current working on status
+      responses:
+        "200":
+          description: Current status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+    put:
+      operationId: updateStatus
+      tags: [status]
+      summary: Update current working on status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStatusBody"
+      responses:
+        "200":
+          description: Updated status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+
+  /projects:
+    get:
+      operationId: getProjects
+      tags: [projects]
+      summary: List all projects
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectBody"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a project by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    put:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectBody"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /certifications:
+    get:
+      operationId: getCertifications
+      tags: [certifications]
+      summary: List all certifications
+      responses:
+        "200":
+          description: List of certifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Certification"
+    post:
+      operationId: createCertification
+      tags: [certifications]
+      summary: Create a certification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCertificationBody"
+      responses:
+        "201":
+          description: Created certification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Certification"
+
+  /certifications/{id}:
+    put:
+      operationId: updateCertification
+      tags: [certifications]
+      summary: Update a certification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCertificationBody"
+      responses:
+        "200":
+          description: Updated certification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Certification"
+    delete:
+      operationId: deleteCertification
+      tags: [certifications]
+      summary: Delete a certification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /skills:
+    get:
+      operationId: getSkills
+      tags: [skills]
+      summary: List all skills
+      responses:
+        "200":
+          description: List of skills
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Skill"
+    post:
+      operationId: createSkill
+      tags: [skills]
+      summary: Create a skill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSkillBody"
+      responses:
+        "201":
+          description: Created skill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Skill"
+
+  /skills/{id}:
+    put:
+      operationId: updateSkill
+      tags: [skills]
+      summary: Update a skill
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSkillBody"
+      responses:
+        "200":
+          description: Updated skill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Skill"
+    delete:
+      operationId: deleteSkill
+      tags: [skills]
+      summary: Delete a skill
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /competitions:
+    get:
+      operationId: getCompetitions
+      tags: [competitions]
+      summary: List all competitions
+      responses:
+        "200":
+          description: List of competitions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Competition"
+    post:
+      operationId: createCompetition
+      tags: [competitions]
+      summary: Create a competition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCompetitionBody"
+      responses:
+        "201":
+          description: Created competition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Competition"
+
+  /competitions/{id}:
+    put:
+      operationId: updateCompetition
+      tags: [competitions]
+      summary: Update a competition
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCompetitionBody"
+      responses:
+        "200":
+          description: Updated competition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Competition"
+    delete:
+      operationId: deleteCompetition
+      tags: [competitions]
+      summary: Delete a competition
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /events:
+    get:
+      operationId: getEvents
+      tags: [events]
+      summary: List all upcoming events and tasks
+      responses:
+        "200":
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+    post:
+      operationId: createEvent
+      tags: [events]
+      summary: Create an event/task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventBody"
+      responses:
+        "201":
+          description: Created event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /events/{id}:
+    put:
+      operationId: updateEvent
+      tags: [events]
+      summary: Update an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventBody"
+      responses:
+        "200":
+          description: Updated event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+    delete:
+      operationId: deleteEvent
+      tags: [events]
+      summary: Delete an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /gallery:
+    get:
+      operationId: getGallery
+      tags: [gallery]
+      summary: List all gallery images
+      responses:
+        "200":
+          description: List of gallery images
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GalleryImage"
+    post:
+      operationId: createGalleryImage
+      tags: [gallery]
+      summary: Add a gallery image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGalleryImageBody"
+      responses:
+        "201":
+          description: Created gallery image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryImage"
+
+  /gallery/{id}:
+    delete:
+      operationId: deleteGalleryImage
+      tags: [gallery]
+      summary: Delete a gallery image
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /resume:
+    get:
+      operationId: getResumeData
+      tags: [dashboard]
+      summary: Get all data needed for resume generation
+      responses:
+        "200":
+          description: Resume data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeData"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +520,344 @@ components:
       required:
         - status
 
+    DashboardSummary:
+      type: object
+      properties:
+        totalProjects:
+          type: integer
+        totalCertifications:
+          type: integer
+        totalSkills:
+          type: integer
+        totalCompetitions:
+          type: integer
+        totalEvents:
+          type: integer
+        totalGalleryImages:
+          type: integer
+        currentStatus:
+          type: string
+      required:
+        - totalProjects
+        - totalCertifications
+        - totalSkills
+        - totalCompetitions
+        - totalEvents
+        - totalGalleryImages
+        - currentStatus
+
+    Status:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - text
+        - updatedAt
+
+    UpdateStatusBody:
+      type: object
+      properties:
+        text:
+          type: string
+      required:
+        - text
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        techStack:
+          type: array
+          items:
+            type: string
+        githubUrl:
+          type: string
+          nullable: true
+        liveUrl:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        featured:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - techStack
+        - featured
+        - createdAt
+
+    CreateProjectBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        techStack:
+          type: array
+          items:
+            type: string
+        githubUrl:
+          type: string
+          nullable: true
+        liveUrl:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        featured:
+          type: boolean
+      required:
+        - title
+        - description
+        - techStack
+        - featured
+
+    Certification:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        issuer:
+          type: string
+        issueDate:
+          type: string
+        credentialUrl:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - issuer
+        - issueDate
+        - createdAt
+
+    CreateCertificationBody:
+      type: object
+      properties:
+        title:
+          type: string
+        issuer:
+          type: string
+        issueDate:
+          type: string
+        credentialUrl:
+          type: string
+          nullable: true
+      required:
+        - title
+        - issuer
+        - issueDate
+
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        category:
+          type: string
+          enum: [language, web, web3, dsa, other]
+        proficiency:
+          type: integer
+          description: 1-100
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - category
+        - proficiency
+        - createdAt
+
+    CreateSkillBody:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          enum: [language, web, web3, dsa, other]
+        proficiency:
+          type: integer
+      required:
+        - name
+        - category
+        - proficiency
+
+    Competition:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        organizer:
+          type: string
+        type:
+          type: string
+          enum: [competition, workshop, hackathon, seminar]
+        date:
+          type: string
+        result:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - organizer
+        - type
+        - date
+        - createdAt
+
+    CreateCompetitionBody:
+      type: object
+      properties:
+        title:
+          type: string
+        organizer:
+          type: string
+        type:
+          type: string
+          enum: [competition, workshop, hackathon, seminar]
+        date:
+          type: string
+        result:
+          type: string
+          nullable: true
+      required:
+        - title
+        - organizer
+        - type
+        - date
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        date:
+          type: string
+        type:
+          type: string
+          enum: [meetup, deadline, task, workshop, other]
+        completed:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - date
+        - type
+        - completed
+        - createdAt
+
+    CreateEventBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        date:
+          type: string
+        type:
+          type: string
+          enum: [meetup, deadline, task, workshop, other]
+        completed:
+          type: boolean
+      required:
+        - title
+        - date
+        - type
+        - completed
+
+    GalleryImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        caption:
+          type: string
+          nullable: true
+        eventName:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required:
+        - id
+        - url
+        - createdAt
+
+    CreateGalleryImageBody:
+      type: object
+      properties:
+        url:
+          type: string
+        caption:
+          type: string
+          nullable: true
+        eventName:
+          type: string
+          nullable: true
+      required:
+        - url
+
+    ResumeData:
+      type: object
+      properties:
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/Skill"
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+        certifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Certification"
+        competitions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Competition"
+      required:
+        - skills
+        - projects
+        - certifications
+        - competitions

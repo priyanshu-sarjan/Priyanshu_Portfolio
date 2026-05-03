@@ -1,0 +1,29 @@
+You are an expert Full-Stack MERN (MongoDB, Express, React, Node.js) developer. Your task is to build a dynamic "Personal CMS Portfolio and Resume Builder". The application must have two sides: a Public-facing Portfolio and a secure Admin Dashboard for content management. Use Tailwind CSS for a modern, responsive UI.
+
+Pre-fill the initial database schema/mock data with my information: Name: Priyanshu Sarjan, 2nd-year B.Tech CSE student at SATI. Core focus: MERN Stack, Blockchain, and DSA in Java/C/Python.
+
+Please generate the frontend components, backend routes, and database schemas for the following features:
+
+1. Secure Admin Dashboard (The Control Center):
+- Build a unified dashboard overview showing a summary of all data (total projects, total certificates, active streak).
+- Create CRUD (Create, Read, Update, Delete) forms to manage the following categories:
+  - "Currently Working On" (Status updater for the homepage).
+  - Upcoming Tasks & Events (A calendar or to-do list for meet-ups/deadlines).
+  - Projects (e.g., AyuTraceChain).
+  - Certifications & Courses Completed (e.g., NPTEL).
+  - Skills (categorized by language, web, web3).
+  - Competitions & Workshops Participated.
+  - Event Meet-ups Gallery (Image upload management).
+
+2. Public Portfolio UI:
+- Hero Section: Display the "Currently Working On" status prominently, alongside a professional introduction.
+- Dynamic Sections: Render beautiful, responsive grids/lists for Projects, Certificates, Skills, Competitions, and the Photo Gallery, fetching data directly from the backend.
+- Upcoming Timeline: A public-facing timeline showing events or workshops I will be attending soon.
+
+3. Dynamic Auto-Resume Generator:
+- Create a dedicated `/resume` route.
+- Build a clean, professional, ATS-friendly resume template component (using a library like `react-to-pdf` or standard CSS print rules).
+- This component must automatically pull the latest Skills, Projects, Education, and Certifications from the database and format them into the template.
+- Include a prominent "Download as PDF" button that triggers the browser's print-to-PDF function or generates the file directly.
+
+Please start by setting up the React application, the Tailwind configurations, the MongoDB schema models, and the Express API routes. Build the Admin Dashboard skeleton first so I can start managing my data.
