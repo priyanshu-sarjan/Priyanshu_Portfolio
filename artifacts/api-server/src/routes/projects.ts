@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { projectsTable } from "@workspace/db";
 import { CreateProjectBody, UpdateProjectBody, GetProjectParams } from "@workspace/api-zod";
 import { eq } from "drizzle-orm";
+import { requireAuth } from "../middlewares/auth";
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.get("/projects", async (req, res) => {
   res.json(rows.map(toJSON));
 });
 
-router.post("/projects", async (req, res) => {
+router.post("/projects", requireAuth, async (req, res) => {
   const parsed = CreateProjectBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid body" });
@@ -47,7 +48,7 @@ router.get("/projects/:id", async (req, res) => {
   res.json(toJSON(rows[0]));
 });
 
-router.put("/projects/:id", async (req, res) => {
+router.put("/projects/:id", requireAuth, async (req, res) => {
   const params = GetProjectParams.safeParse({ id: Number(req.params.id) });
   if (!params.success) {
     res.status(400).json({ error: "Invalid id" });
@@ -69,7 +70,7 @@ router.put("/projects/:id", async (req, res) => {
   res.json(toJSON(updated[0]));
 });
 
-router.delete("/projects/:id", async (req, res) => {
+router.delete("/projects/:id", requireAuth, async (req, res) => {
   const id = Number(req.params.id);
   await db.delete(projectsTable).where(eq(projectsTable.id, id));
   res.status(204).send();

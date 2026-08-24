@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { useGetProjects, useGetSkills, useGetCertifications, useGetCompetitions, useGetGallery, useGetStatus } from "@workspace/api-client-react";
 import { PublicLayout } from "@/components/layout/public-layout";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,16 @@ export default function Home() {
   const { data: certifications = [], isLoading: loadingCertifications } = useGetCertifications();
   const { data: competitions = [], isLoading: loadingCompetitions } = useGetCompetitions();
   const { data: gallery = [], isLoading: loadingGallery } = useGetGallery();
+  const [experiences, setExperiences] = useState<any[]>([]);
+  const [loadingExp, setLoadingExp] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/experiences")
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setExperiences(data))
+      .catch(() => setExperiences([]))
+      .finally(() => setLoadingExp(false));
+  }, []);
 
   const featuredProjects = projects.filter(p => p.featured);
   const allProjects = projects.filter(p => !p.featured);
@@ -48,12 +59,54 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap gap-3 pt-2">
-            <a href="https://github.com" target="_blank" rel="noreferrer"
+            <a href="https://github.com/priyanshu-sarjan" target="_blank" rel="noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-muted hover:bg-muted/80 text-sm font-medium transition-colors">
               <Github className="w-4 h-4" /> GitHub
             </a>
+            <a href="/resume"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors">
+              View & Export PDF CV
+            </a>
           </div>
         </section>
+
+        {/* Work Experience Timeline */}
+        {experiences.length > 0 && (
+          <section className="space-y-8">
+            <div className="flex items-center gap-3">
+              <Zap className="w-6 h-6 text-primary" />
+              <h2 className="text-3xl font-bold">Experience Timeline</h2>
+            </div>
+            {loadingExp ? (
+              <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
+            ) : (
+              <div className="space-y-6 border-l-2 border-primary/20 pl-6 ml-2">
+                {experiences.map((exp: any) => (
+                  <div key={exp.id} className="relative group">
+                    <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-primary border-4 border-background group-hover:scale-125 transition-transform" />
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <h3 className="text-xl font-bold text-foreground">{exp.title}</h3>
+                        <span className="text-xs font-semibold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
+                          {exp.startDate} - {exp.endDate || "Present"}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium text-muted-foreground">{exp.company} {exp.location ? `• ${exp.location}` : ""}</p>
+                      <p className="text-sm text-muted-foreground/90 pt-1 leading-relaxed">{exp.description}</p>
+                      {exp.techStack && exp.techStack.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-2">
+                          {exp.techStack.map((tech: string, i: number) => (
+                            <Badge key={i} variant="outline" className="text-xs bg-muted/60">{tech}</Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Featured Projects */}
         <section className="space-y-8">

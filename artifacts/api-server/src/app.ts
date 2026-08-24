@@ -1,5 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import path from "path";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -25,9 +27,18 @@ app.use(
     },
   }),
 );
-app.use(cors());
+
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static uploads
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
+app.use("/uploads", express.static(UPLOAD_DIR));
 
 app.use("/api", router);
 

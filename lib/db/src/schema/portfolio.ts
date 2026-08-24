@@ -6,6 +6,39 @@ export const skillCategoryEnum = pgEnum("skill_category", ["language", "web", "w
 export const competitionTypeEnum = pgEnum("competition_type", ["competition", "workshop", "hackathon", "seminar"]);
 export const eventTypeEnum = pgEnum("event_type", ["meetup", "deadline", "task", "workshop", "other"]);
 
+export const usersTable = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").notNull().default("admin"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const experiencesTable = pgTable("experiences", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  company: text("company").notNull(),
+  location: text("location"),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date").default("Present"),
+  description: text("description").notNull(),
+  techStack: text("tech_stack").array().notNull().default([]),
+  order: integer("order").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const assetsTable = pgTable("assets", {
+  id: serial("id").primaryKey(),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(),
+  url: text("url").notNull(),
+  thumbnailUrl: text("thumbnail_url"),
+  category: text("category").notNull().default("general"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const statusTable = pgTable("status", {
   id: serial("id").primaryKey(),
   text: text("text").notNull(),
@@ -69,6 +102,9 @@ export const galleryTable = pgTable("gallery", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const insertUserSchema = createInsertSchema(usersTable).omit({ id: true, createdAt: true });
+export const insertExperienceSchema = createInsertSchema(experiencesTable).omit({ id: true, createdAt: true });
+export const insertAssetSchema = createInsertSchema(assetsTable).omit({ id: true, createdAt: true });
 export const insertStatusSchema = createInsertSchema(statusTable).omit({ id: true, updatedAt: true });
 export const insertProjectSchema = createInsertSchema(projectsTable).omit({ id: true, createdAt: true });
 export const insertCertificationSchema = createInsertSchema(certificationsTable).omit({ id: true, createdAt: true });
@@ -77,6 +113,12 @@ export const insertCompetitionSchema = createInsertSchema(competitionsTable).omi
 export const insertEventSchema = createInsertSchema(eventsTable).omit({ id: true, createdAt: true });
 export const insertGallerySchema = createInsertSchema(galleryTable).omit({ id: true, createdAt: true });
 
+export type User = typeof usersTable.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type Experience = typeof experiencesTable.$inferSelect;
+export type InsertExperience = z.infer<typeof insertExperienceSchema>;
+export type Asset = typeof assetsTable.$inferSelect;
+export type InsertAsset = z.infer<typeof insertAssetSchema>;
 export type Status = typeof statusTable.$inferSelect;
 export type InsertStatus = z.infer<typeof insertStatusSchema>;
 export type Project = typeof projectsTable.$inferSelect;
@@ -91,3 +133,4 @@ export type Event = typeof eventsTable.$inferSelect;
 export type InsertEvent = z.infer<typeof insertEventSchema>;
 export type GalleryImage = typeof galleryTable.$inferSelect;
 export type InsertGalleryImage = z.infer<typeof insertGallerySchema>;
+
