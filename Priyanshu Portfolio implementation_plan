@@ -1,0 +1,98 @@
+# Implementation Plan - Full-Stack Dynamic Portfolio with Admin CMS & PDF Export Engine
+
+Upgrade the portfolio repository into a production-grade full-stack web application featuring JWT admin authentication, protected CMS REST APIs, experience & asset/certificate management, dynamic PDF resume export engine with 2 distinct templates, and remote repository syncing.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - **Default Admin Credentials**: A seed script will create an initial admin user (`admin` / `admin123456`) which can be updated via the `/admin` portal or `.env` variable `ADMIN_PASSWORD`.
+> - **Target Repository**: The final code will be committed and pushed to `https://github.com/priyanshu-sarjan/Priyanshu_Portfolio.git` on the `main` branch.
+
+## Proposed Changes
+
+---
+
+### 1. Database Schema & Shared Library (`lib/db`)
+
+#### [MODIFY] [portfolio.ts](file:///d:/Downloads/Projects/Portfolio/lib/db/src/schema/portfolio.ts)
+- Add `usersTable`: Admin user credentials (`id`, `username`, `passwordHash`, `role`, `createdAt`).
+- Add `experiencesTable`: Work experience entries (`id`, `title`, `company`, `location`, `startDate`, `endDate`, `description`, `techStack`, `order`, `createdAt`).
+- Add `assetsTable`: Uploaded certificate PDFs & image assets (`id`, `filename`, `originalName`, `mimeType`, `size`, `url`, `thumbnailUrl`, `category`, `createdAt`).
+- Export Zod schemas (`insertUserSchema`, `insertExperienceSchema`, `insertAssetSchema`).
+
+---
+
+### 2. Backend REST API & Authentication (`artifacts/api-server`)
+
+#### [NEW] [auth.ts](file:///d:/Downloads/Projects/Portfolio/artifacts/api-server/src/middlewares/auth.ts)
+- Middleware `requireAuth` to verify JWT tokens from `Authorization: Bearer <token>` or HTTP cookie.
+
+#### [NEW] [auth.ts](file:///d:/Downloads/Projects/Portfolio/artifacts/api-server/src/routes/auth.ts)
+- `POST /api/auth/login`: Admin password authentication & JWT token generation.
+- `GET /api/auth/me`: Verify session & token validity.
+
+#### [NEW] [experiences.ts](file:///d:/Downloads/Projects/Portfolio/artifacts/api-server/src/routes/experiences.ts)
+- `GET /api/experiences`: Fetch all work experiences.
+- `POST /api/experiences`, `PUT /api/experiences/:id`, `DELETE /api/experiences/:id`: Protected CRUD operations.
+
+#### [NEW] [assets.ts](file:///d:/Downloads/Projects/Portfolio/artifacts/api-server/src/routes/assets.ts)
+- `POST /api/upload`: Multipart upload for images and PDF certificates with thumbnail generation.
+- `GET /api/assets`, `DELETE /api/assets/:id`: Manage uploaded assets.
+- Serve static files from `/uploads`.
+
+#### [MODIFY] [routes/index.ts](file:///d:/Downloads/Projects/Portfolio/artifacts/api-server/src/routes/index.ts)
+- Mount auth, experiences, and assets routes.
+- Apply `requireAuth` protection to all mutation routes (`POST`, `PUT`, `DELETE`, `PATCH`).
+
+#### [NEW] [seed.ts](file:///d:/Downloads/Projects/Portfolio/scripts/src/seed.ts)
+- Seed initial admin user, experience timeline, projects, skills, certificates, and sample assets.
+
+---
+
+### 3. Frontend & Admin CMS (`artifacts/portfolio`)
+
+#### [NEW] [AuthContext.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/context/AuthContext.tsx)
+- React context managing JWT authentication state, token storage, and login/logout functions.
+
+#### [NEW] [login.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/pages/admin/login.tsx)
+- Glassmorphism login interface for `/admin/login` with JWT authentication flow.
+
+#### [NEW] [AdminGuard.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/components/AdminGuard.tsx)
+- Route guard restricting `/admin/*` routes to authenticated admin users.
+
+#### [NEW] [experience.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/pages/admin/experience.tsx)
+- Admin CMS page to add, edit, delete, and reorder work experiences.
+
+#### [NEW] [assets.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/pages/admin/assets.tsx)
+- Asset & Certificate Manager with drag-and-drop uploader, PDF viewer modal, and copy URL actions.
+
+#### [MODIFY] [resume.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/pages/resume.tsx)
+- Upgrade resume generator with **2 distinct PDF export templates**:
+  1. **1-Page Modern Resume**: High-density single-page resume layout strictly fitted to 1 standard page.
+  2. **Multi-Page Detailed CV (Booklet Style)**: Comprehensive multi-page report containing bio, timeline, full project writeups, skill matrix, and embedded certificate cards.
+- Add live preview toggle and one-click PDF export/print buttons using client-side PDF renderer.
+
+#### [MODIFY] [home.tsx](file:///d:/Downloads/Projects/Portfolio/artifacts/portfolio/src/pages/home.tsx)
+- Integrate dynamic experience timeline and asset/certificate showcase into the public portfolio.
+
+---
+
+### 4. Configuration & Deployment Setup
+
+#### [NEW] [.env.example](file:///d:/Downloads/Projects/Portfolio/.env.example)
+- Document `DATABASE_URL`, `JWT_SECRET`, `ADMIN_PASSWORD`, `PORT`, `VITE_API_URL`, and file storage config.
+
+---
+
+## Verification Plan
+
+### Automated Verification
+- Run `npx pnpm run typecheck` across all workspace packages to ensure 100% type safety.
+- Run `npx pnpm run build` to verify API server bundling and Vite frontend build.
+
+### Manual Verification
+- Test Admin Login with JWT token storage.
+- Test CRUD operations on Projects, Experiences, Skills, and Certificates via `/admin`.
+- Upload sample PDF certificate and image asset; verify file serving and preview.
+- Render and export both PDF resume templates (1-Page Modern and Multi-Page Booklet).
+- Verify git remote setup and push to `https://github.com/priyanshu-sarjan/Priyanshu_Portfolio.git`.
