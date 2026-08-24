@@ -244,6 +244,11 @@ async function parseJsonBody(
     return null;
   }
 
+  // Handle SPA fallback HTML responses for API calls
+  if (normalized.trimStart().startsWith("<!DOCTYPE") || normalized.trimStart().startsWith("<html")) {
+    return null;
+  }
+
   try {
     return JSON.parse(normalized);
   } catch (cause) {

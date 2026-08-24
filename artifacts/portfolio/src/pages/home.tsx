@@ -13,23 +13,77 @@ const SKILL_CATEGORIES = [
   { id: "other" as const, label: "Other Tools" },
 ];
 
+const FALLBACK_STATUS = "Building full-stack MERN & Web3 applications";
+
+const FALLBACK_PROJECTS = [
+  {
+    id: 1,
+    title: "Personal Portfolio & CMS",
+    description: "Full-stack dynamic portfolio featuring JWT admin authentication, experience CMS, certificate uploads, and a 2-template PDF resume engine.",
+    techStack: ["React", "TypeScript", "Node.js", "Express", "Tailwind CSS", "Drizzle ORM"],
+    githubUrl: "https://github.com/priyanshu-sarjan/Priyanshu_Portfolio",
+    liveUrl: "https://priyanshu-sarjanportfolio.vercel.app",
+    featured: true,
+  },
+  {
+    id: 2,
+    title: "Decentralized Smart Contract Suite",
+    description: "Solidity smart contract protocol architecture with automated test suite and web3 frontend integration.",
+    techStack: ["Solidity", "Ethers.js", "React", "Hardhat", "Ethereum"],
+    githubUrl: "https://github.com/priyanshu-sarjan",
+    liveUrl: "https://github.com/priyanshu-sarjan",
+    featured: true,
+  },
+];
+
+const FALLBACK_SKILLS = [
+  { id: 1, name: "JavaScript / TypeScript", category: "language", proficiency: 90 },
+  { id: 2, name: "Java & C Programming", category: "language", proficiency: 85 },
+  { id: 3, name: "Python", category: "language", proficiency: 80 },
+  { id: 4, name: "React & Vite", category: "web", proficiency: 92 },
+  { id: 5, name: "Node.js & Express", category: "web", proficiency: 88 },
+  { id: 6, name: "Tailwind CSS", category: "web", proficiency: 90 },
+  { id: 7, name: "Solidity & Smart Contracts", category: "web3", proficiency: 80 },
+  { id: 8, name: "Data Structures & Algorithms", category: "dsa", proficiency: 85 },
+];
+
+const FALLBACK_EXPERIENCES = [
+  {
+    id: 1,
+    title: "Full-Stack Web Developer & Lead",
+    company: "SATI Tech Club",
+    location: "Vidisha, MP",
+    startDate: "2024",
+    endDate: "Present",
+    description: "Architected full-stack web applications, conducted technical workshops on MERN stack, and mentored 100+ junior students in Data Structures and Algorithms.",
+    techStack: ["React", "Node.js", "TypeScript", "Tailwind CSS"],
+  },
+];
+
 export default function Home() {
-  const { data: status, isLoading: loadingStatus } = useGetStatus();
-  const { data: projects = [], isLoading: loadingProjects } = useGetProjects();
-  const { data: skills = [], isLoading: loadingSkills } = useGetSkills();
-  const { data: certifications = [], isLoading: loadingCertifications } = useGetCertifications();
-  const { data: competitions = [], isLoading: loadingCompetitions } = useGetCompetitions();
-  const { data: gallery = [], isLoading: loadingGallery } = useGetGallery();
+  const { data: statusData, isLoading: loadingStatus } = useGetStatus();
+  const { data: rawProjects, isLoading: loadingProjects } = useGetProjects();
+  const { data: rawSkills, isLoading: loadingSkills } = useGetSkills();
+  const { data: rawCertifications, isLoading: loadingCertifications } = useGetCertifications();
+  const { data: rawCompetitions, isLoading: loadingCompetitions } = useGetCompetitions();
+  const { data: rawGallery, isLoading: loadingGallery } = useGetGallery();
   const [experiences, setExperiences] = useState<any[]>([]);
   const [loadingExp, setLoadingExp] = useState(true);
 
   useEffect(() => {
     fetch("/api/experiences")
       .then(res => res.ok ? res.json() : [])
-      .then(data => setExperiences(data))
-      .catch(() => setExperiences([]))
+      .then(data => setExperiences(Array.isArray(data) && data.length > 0 ? data : FALLBACK_EXPERIENCES))
+      .catch(() => setExperiences(FALLBACK_EXPERIENCES))
       .finally(() => setLoadingExp(false));
   }, []);
+
+  const status = statusData?.text || FALLBACK_STATUS;
+  const projects = Array.isArray(rawProjects) && rawProjects.length > 0 ? rawProjects : FALLBACK_PROJECTS;
+  const skills = Array.isArray(rawSkills) && rawSkills.length > 0 ? rawSkills : FALLBACK_SKILLS;
+  const certifications = Array.isArray(rawCertifications) ? rawCertifications : [];
+  const competitions = Array.isArray(rawCompetitions) ? rawCompetitions : [];
+  const gallery = Array.isArray(rawGallery) ? rawGallery : [];
 
   const featuredProjects = projects.filter(p => p.featured);
   const allProjects = projects.filter(p => !p.featured);
@@ -45,7 +99,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
-            {loadingStatus ? <Loader2 className="w-3 h-3 animate-spin" /> : (status?.text || "Building cool things")}
+            {loadingStatus ? <Loader2 className="w-3 h-3 animate-spin" /> : (typeof status === "string" ? status : (status as any)?.text || FALLBACK_STATUS)}
           </div>
 
           <div className="space-y-4">
