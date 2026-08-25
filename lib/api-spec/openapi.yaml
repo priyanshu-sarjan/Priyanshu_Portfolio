@@ -644,6 +644,9 @@ components:
         credentialUrl:
           type: string
           nullable: true
+        imageUrl:
+          type: string
+          nullable: true
         createdAt:
           type: string
       required:
@@ -663,6 +666,9 @@ components:
         issueDate:
           type: string
         credentialUrl:
+          type: string
+          nullable: true
+        imageUrl:
           type: string
           nullable: true
       required:
@@ -772,6 +778,12 @@ components:
           enum: [meetup, deadline, task, workshop, other]
         completed:
           type: boolean
+        imageUrl:
+          type: string
+          nullable: true
+        videoUrl:
+          type: string
+          nullable: true
         createdAt:
           type: string
       required:
@@ -797,6 +809,12 @@ components:
           enum: [meetup, deadline, task, workshop, other]
         completed:
           type: boolean
+        imageUrl:
+          type: string
+          nullable: true
+        videoUrl:
+          type: string
+          nullable: true
       required:
         - title
         - date

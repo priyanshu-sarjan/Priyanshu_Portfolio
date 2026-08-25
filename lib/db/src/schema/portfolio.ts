@@ -63,6 +63,7 @@ export const certificationsTable = pgTable("certifications", {
   issuer: text("issuer").notNull(),
   issueDate: text("issue_date").notNull(),
   credentialUrl: text("credential_url"),
+  imageUrl: text("image_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -91,6 +92,8 @@ export const eventsTable = pgTable("events", {
   date: text("date").notNull(),
   type: eventTypeEnum("type").notNull(),
   completed: boolean("completed").notNull().default(false),
+  imageUrl: text("image_url"),
+  videoUrl: text("video_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

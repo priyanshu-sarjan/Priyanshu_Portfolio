@@ -137,6 +137,19 @@ export default function AdminAssetsPage() {
         </label>
       </div>
 
+      {/* Media Hosting Guidelines Banner */}
+      <div className="bg-cyan-950/40 border border-cyan-500/20 rounded-xl p-4 text-xs space-y-2 text-cyan-200/90">
+        <div className="font-semibold text-cyan-300 flex items-center gap-2 text-sm">
+          <FolderOpen className="w-4 h-4 text-cyan-400" /> Media & Credential Hosting Quick Checklist
+        </div>
+        <ul className="list-disc list-inside space-y-1 text-slate-300">
+          <li><strong>Static Repository Files:</strong> Place static files inside <code className="bg-slate-800 px-1 py-0.5 rounded text-cyan-300">public/certificates/</code> or <code className="bg-slate-800 px-1 py-0.5 rounded text-cyan-300">public/events/</code> and reference them with a leading slash (e.g. <code className="bg-slate-800 px-1 py-0.5 rounded text-cyan-300">/certificates/aws-cert.png</code>).</li>
+          <li><strong>Image Optimization:</strong> Keep image file sizes under <strong>500 KB</strong> (using WebP or compressed JPG) for fast page loading on Vercel.</li>
+          <li><strong>Video Embeds:</strong> Upload large event videos to YouTube or Vimeo and use YouTube embed links (e.g. <code className="bg-slate-800 px-1 py-0.5 rounded text-cyan-300">https://www.youtube.com/embed/VIDEO_ID</code>).</li>
+          <li><strong>Cloud Storage:</strong> Use Cloudinary or Supabase CDN URLs directly in your entries for instant updates without re-building code.</li>
+        </ul>
+      </div>
+
       {/* Category Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
         {["all", "certificate", "image"].map((cat) => (

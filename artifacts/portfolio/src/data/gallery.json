@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "url": "/photos/hackathon-winner.jpg",
+    "caption": "1st Place trophy presentation at College Hackathon 2026",
+    "eventName": "SIH Hackathon 2026"
+  },
+  {
+    "id": 2,
+    "url": "/photos/tech-workshop.jpg",
+    "caption": "Conducting MERN Stack & DSA workshop at SATI Tech Club",
+    "eventName": "MERN & DSA Workshop"
+  }
+]

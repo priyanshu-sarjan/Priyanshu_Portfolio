@@ -13,6 +13,8 @@ const toJSON = (row: typeof eventsTable.$inferSelect) => ({
   date: row.date,
   type: row.type,
   completed: row.completed,
+  imageUrl: row.imageUrl ?? null,
+  videoUrl: row.videoUrl ?? null,
   createdAt: row.createdAt.toISOString(),
 });
 

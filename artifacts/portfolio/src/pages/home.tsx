@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, Github, Loader2, Award, Zap, Trophy, Image as ImageIcon } from "lucide-react";
 
+import staticCertificates from "@/data/certificates.json";
+import staticGallery from "@/data/gallery.json";
+
 const SKILL_CATEGORIES = [
   { id: "language" as const, label: "Languages" },
   { id: "web" as const, label: "Web Dev" },
@@ -23,6 +26,7 @@ const FALLBACK_PROJECTS = [
     techStack: ["React", "TypeScript", "Node.js", "Express", "Tailwind CSS", "Drizzle ORM"],
     githubUrl: "https://github.com/priyanshu-sarjan/Priyanshu_Portfolio",
     liveUrl: "https://priyanshu-sarjanportfolio.vercel.app",
+    imageUrl: null as string | null,
     featured: true,
   },
   {
@@ -32,6 +36,7 @@ const FALLBACK_PROJECTS = [
     techStack: ["Solidity", "Ethers.js", "React", "Hardhat", "Ethereum"],
     githubUrl: "https://github.com/priyanshu-sarjan",
     liveUrl: "https://github.com/priyanshu-sarjan",
+    imageUrl: null as string | null,
     featured: true,
   },
 ];
@@ -81,9 +86,9 @@ export default function Home() {
   const status = statusData?.text || FALLBACK_STATUS;
   const projects = Array.isArray(rawProjects) && rawProjects.length > 0 ? rawProjects : FALLBACK_PROJECTS;
   const skills = Array.isArray(rawSkills) && rawSkills.length > 0 ? rawSkills : FALLBACK_SKILLS;
-  const certifications = Array.isArray(rawCertifications) ? rawCertifications : [];
+  const certifications = Array.isArray(rawCertifications) && rawCertifications.length > 0 ? rawCertifications : (staticCertificates as any[]);
   const competitions = Array.isArray(rawCompetitions) ? rawCompetitions : [];
-  const gallery = Array.isArray(rawGallery) ? rawGallery : [];
+  const gallery = Array.isArray(rawGallery) && rawGallery.length > 0 ? rawGallery : (staticGallery as any[]);
 
   const featuredProjects = projects.filter(p => p.featured);
   const allProjects = projects.filter(p => !p.featured);
@@ -255,7 +260,7 @@ export default function Home() {
         <section className="space-y-8">
           <div className="flex items-center gap-3">
             <Award className="w-6 h-6 text-primary" />
-            <h2 className="text-3xl font-bold">Certifications</h2>
+            <h2 className="text-3xl font-bold">Certifications & Verified Credentials</h2>
           </div>
           {loadingCertifications ? (
             <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
@@ -263,22 +268,29 @@ export default function Home() {
             <p className="text-muted-foreground text-center py-8">No certifications added yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {certifications.map(cert => (
-                <div key={cert.id} className="p-4 rounded-lg border border-border bg-card hover:border-primary/30 transition-colors">
+              {certifications.map((cert: any) => (
+                <div key={cert.id} className="p-4 rounded-lg border border-border bg-card hover:border-primary/30 transition-colors flex flex-col justify-between">
                   <div className="flex items-start gap-3">
-                    <Award className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                    <div className="min-w-0">
+                    {cert.imageUrl ? (
+                      <img src={cert.imageUrl} alt={cert.title} className="w-10 h-10 object-contain rounded shrink-0 bg-muted/40 p-1 border border-border" />
+                    ) : (
+                      <Award className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                    )}
+                    <div className="min-w-0 flex-1">
                       <p className="font-semibold text-sm leading-tight">{cert.title}</p>
                       <p className="text-xs text-muted-foreground mt-1">{cert.issuer}</p>
                       <p className="text-xs text-muted-foreground">{cert.issueDate}</p>
-                      {cert.credentialUrl && (
-                        <a href={cert.credentialUrl} target="_blank" rel="noreferrer"
-                          className="text-xs text-primary hover:underline mt-1 inline-block">
-                          View credential
-                        </a>
-                      )}
                     </div>
                   </div>
+                  {cert.credentialUrl && (
+                    <div className="mt-3 pt-2 border-t border-border/60 flex items-center justify-between">
+                      <a href={cert.credentialUrl} target="_blank" rel="noreferrer"
+                        className="text-xs text-primary hover:underline inline-flex items-center gap-1 font-medium">
+                        <ExternalLink className="w-3 h-3" /> Verify Credential
+                      </a>
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Verified</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

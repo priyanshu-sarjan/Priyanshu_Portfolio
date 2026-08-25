@@ -8,8 +8,8 @@ import { Loader2, Plus, Pencil, Trash2, Award, ExternalLink } from "lucide-react
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
-type Form = { title: string; issuer: string; issueDate: string; credentialUrl: string };
-const emptyForm: Form = { title: "", issuer: "", issueDate: "", credentialUrl: "" };
+type Form = { title: string; issuer: string; issueDate: string; credentialUrl: string; imageUrl: string };
+const emptyForm: Form = { title: "", issuer: "", issueDate: "", credentialUrl: "", imageUrl: "" };
 
 export default function AdminCertifications() {
   const { data: certs = [], isLoading } = useGetCertifications();
@@ -26,12 +26,24 @@ export default function AdminCertifications() {
   const openCreate = () => { setEditId(null); setForm(emptyForm); setOpen(true); };
   const openEdit = (c: typeof certs[0]) => {
     setEditId(c.id);
-    setForm({ title: c.title, issuer: c.issuer, issueDate: c.issueDate, credentialUrl: c.credentialUrl || "" });
+    setForm({
+      title: c.title,
+      issuer: c.issuer,
+      issueDate: c.issueDate,
+      credentialUrl: c.credentialUrl || "",
+      imageUrl: c.imageUrl || "",
+    });
     setOpen(true);
   };
 
   const handleSubmit = async () => {
-    const data = { title: form.title, issuer: form.issuer, issueDate: form.issueDate, credentialUrl: form.credentialUrl || null };
+    const data = {
+      title: form.title,
+      issuer: form.issuer,
+      issueDate: form.issueDate,
+      credentialUrl: form.credentialUrl || null,
+      imageUrl: form.imageUrl || null,
+    };
     if (editId !== null) {
       await updateCertification.mutateAsync({ id: editId, data }, { onSuccess: () => { refresh(); setOpen(false); toast({ title: "Certification updated" }); } });
     } else {
@@ -50,8 +62,8 @@ export default function AdminCertifications() {
       <div className="p-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Certifications</h1>
-            <p className="text-muted-foreground mt-1">{certs.length} total</p>
+            <h1 className="text-3xl font-bold">Certifications & Credentials</h1>
+            <p className="text-muted-foreground mt-1">{certs.length} total certificates listed</p>
           </div>
           <Button onClick={openCreate} className="gap-2"><Plus className="w-4 h-4" /> Add Certification</Button>
         </div>
@@ -67,13 +79,17 @@ export default function AdminCertifications() {
           <div className="space-y-3">
             {certs.map(c => (
               <div key={c.id} className="flex items-center gap-4 p-4 rounded-lg border border-border bg-card hover:border-primary/30 transition-colors">
-                <Award className="w-5 h-5 text-primary shrink-0" />
+                {c.imageUrl ? (
+                  <img src={c.imageUrl} alt={c.title} className="w-12 h-12 object-contain rounded border border-border shrink-0 bg-muted/30" />
+                ) : (
+                  <Award className="w-6 h-6 text-primary shrink-0" />
+                )}
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold">{c.title}</p>
                   <p className="text-sm text-muted-foreground">{c.issuer} — {c.issueDate}</p>
                   {c.credentialUrl && (
                     <a href={c.credentialUrl} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1 mt-1">
-                      <ExternalLink className="w-3 h-3" /> View Credential
+                      <ExternalLink className="w-3 h-3" /> View Verification Credential
                     </a>
                   )}
                 </div>
@@ -90,10 +106,19 @@ export default function AdminCertifications() {
           <DialogContent>
             <DialogHeader><DialogTitle>{editId !== null ? "Edit Certification" : "New Certification"}</DialogTitle></DialogHeader>
             <div className="space-y-4">
-              <div className="space-y-1"><label className="text-sm font-medium">Title</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. Cloud Computing" /></div>
-              <div className="space-y-1"><label className="text-sm font-medium">Issuer</label><Input value={form.issuer} onChange={e => setForm(f => ({ ...f, issuer: e.target.value }))} placeholder="e.g. NPTEL" /></div>
-              <div className="space-y-1"><label className="text-sm font-medium">Issue Date</label><Input value={form.issueDate} onChange={e => setForm(f => ({ ...f, issueDate: e.target.value }))} placeholder="e.g. April 2024" /></div>
-              <div className="space-y-1"><label className="text-sm font-medium">Credential URL</label><Input value={form.credentialUrl} onChange={e => setForm(f => ({ ...f, credentialUrl: e.target.value }))} placeholder="https://..." /></div>
+              <div className="space-y-1"><label className="text-sm font-medium">Title</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. AWS Certified Solutions Architect" /></div>
+              <div className="space-y-1"><label className="text-sm font-medium">Issuer</label><Input value={form.issuer} onChange={e => setForm(f => ({ ...f, issuer: e.target.value }))} placeholder="e.g. Amazon Web Services / Coursera" /></div>
+              <div className="space-y-1"><label className="text-sm font-medium">Issue Date</label><Input value={form.issueDate} onChange={e => setForm(f => ({ ...f, issueDate: e.target.value }))} placeholder="e.g. 2025" /></div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Certificate Image / Badge URL</label>
+                <Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="/certificates/aws-cert.png or https://cdn.cloudinary.com/..." />
+                <p className="text-xs text-muted-foreground">Use local path starting with `/certificates/...` or Cloudinary/Supabase CDN URL.</p>
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Credential Verification URL</label>
+                <Input value={form.credentialUrl} onChange={e => setForm(f => ({ ...f, credentialUrl: e.target.value }))} placeholder="https://verify.example.com/cert/123" />
+                <p className="text-xs text-muted-foreground">Public verification link (AWS, Coursera, HackerRank, etc.).</p>
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>

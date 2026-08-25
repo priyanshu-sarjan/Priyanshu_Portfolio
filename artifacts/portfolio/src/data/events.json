@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "title": "Smart India Hackathon 2026 Grand Finale",
+    "description": "Demonstrated AI-powered Web3 analytics solution in front of national jury panel.",
+    "date": "March 2026",
+    "type": "workshop",
+    "completed": true,
+    "imageUrl": "/events/hackathon-2026.jpg",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+  },
+  {
+    "id": 2,
+    "title": "SATI Tech Summit & Web3 Keynote",
+    "description": "Delivered keynote session on modern full-stack application development and smart contract security.",
+    "date": "February 2026",
+    "type": "meetup",
+    "completed": true,
+    "imageUrl": "/events/tech-summit.jpg",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+  }
+]

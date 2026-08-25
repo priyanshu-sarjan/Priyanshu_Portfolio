@@ -57,6 +57,7 @@ export interface Certification {
   issuer: string;
   issueDate: string;
   credentialUrl?: string | null;
+  imageUrl?: string | null;
   createdAt: string;
 }
 
@@ -65,6 +66,7 @@ export interface CreateCertificationBody {
   issuer: string;
   issueDate: string;
   credentialUrl?: string | null;
+  imageUrl?: string | null;
 }
 
 export type SkillCategory = (typeof SkillCategory)[keyof typeof SkillCategory];
@@ -158,6 +160,8 @@ export interface Event {
   date: string;
   type: EventType;
   completed: boolean;
+  imageUrl?: string | null;
+  videoUrl?: string | null;
   createdAt: string;
 }
 
@@ -178,6 +182,8 @@ export interface CreateEventBody {
   date: string;
   type: CreateEventBodyType;
   completed: boolean;
+  imageUrl?: string | null;
+  videoUrl?: string | null;
 }
 
 export interface GalleryImage {

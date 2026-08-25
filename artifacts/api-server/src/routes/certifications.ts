@@ -12,6 +12,7 @@ const toJSON = (row: typeof certificationsTable.$inferSelect) => ({
   issuer: row.issuer,
   issueDate: row.issueDate,
   credentialUrl: row.credentialUrl ?? null,
+  imageUrl: row.imageUrl ?? null,
   createdAt: row.createdAt.toISOString(),
 });
 

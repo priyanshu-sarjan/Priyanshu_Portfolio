@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "AWS Certified Cloud Practitioner",
+    "issuer": "Amazon Web Services",
+    "issueDate": "2025",
+    "imageUrl": "/certificates/aws-cert.png",
+    "credentialUrl": "https://aws.amazon.com/verification"
+  },
+  {
+    "id": 2,
+    "title": "Meta Front-End Developer Specialization",
+    "issuer": "Coursera / Meta",
+    "issueDate": "2025",
+    "imageUrl": "/certificates/meta-frontend.png",
+    "credentialUrl": "https://coursera.org/verify/example"
+  }
+]

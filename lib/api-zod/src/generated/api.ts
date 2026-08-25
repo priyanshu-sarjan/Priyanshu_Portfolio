@@ -142,6 +142,7 @@ export const GetCertificationsResponseItem = zod.object({
   issuer: zod.string(),
   issueDate: zod.string(),
   credentialUrl: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const GetCertificationsResponse = zod.array(
@@ -156,6 +157,7 @@ export const CreateCertificationBody = zod.object({
   issuer: zod.string(),
   issueDate: zod.string(),
   credentialUrl: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
 });
 
 /**
@@ -170,6 +172,7 @@ export const UpdateCertificationBody = zod.object({
   issuer: zod.string(),
   issueDate: zod.string(),
   credentialUrl: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
 });
 
 export const UpdateCertificationResponse = zod.object({
@@ -178,6 +181,7 @@ export const UpdateCertificationResponse = zod.object({
   issuer: zod.string(),
   issueDate: zod.string(),
   credentialUrl: zod.string().nullish(),
+  imageUrl: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -304,6 +308,8 @@ export const GetEventsResponseItem = zod.object({
   date: zod.string(),
   type: zod.enum(["meetup", "deadline", "task", "workshop", "other"]),
   completed: zod.boolean(),
+  imageUrl: zod.string().nullish(),
+  videoUrl: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const GetEventsResponse = zod.array(GetEventsResponseItem);
@@ -317,6 +323,8 @@ export const CreateEventBody = zod.object({
   date: zod.string(),
   type: zod.enum(["meetup", "deadline", "task", "workshop", "other"]),
   completed: zod.boolean(),
+  imageUrl: zod.string().nullish(),
+  videoUrl: zod.string().nullish(),
 });
 
 /**
@@ -332,6 +340,8 @@ export const UpdateEventBody = zod.object({
   date: zod.string(),
   type: zod.enum(["meetup", "deadline", "task", "workshop", "other"]),
   completed: zod.boolean(),
+  imageUrl: zod.string().nullish(),
+  videoUrl: zod.string().nullish(),
 });
 
 export const UpdateEventResponse = zod.object({
@@ -341,6 +351,8 @@ export const UpdateEventResponse = zod.object({
   date: zod.string(),
   type: zod.enum(["meetup", "deadline", "task", "workshop", "other"]),
   completed: zod.boolean(),
+  imageUrl: zod.string().nullish(),
+  videoUrl: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
